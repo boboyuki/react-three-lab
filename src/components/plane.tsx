@@ -1,3 +1,5 @@
+import {} from '@react-three/fiber';
+
 type PlaneProps = {
 	rotateX: number;
 	position: [number, number, number];
@@ -5,9 +7,9 @@ type PlaneProps = {
 
 export const Plane = ({ rotateX, position }: PlaneProps) => {
 	return (
-		<mesh rotation-x={rotateX} position={position}>
+		<mesh rotation-x={rotateX} position={position} receiveShadow>
 			<planeGeometry args={[60, 60]} />
-			<meshLambertMaterial color={'0xffffff'} />
+			<meshLambertMaterial color={0xffffff} />
 		</mesh>
 	);
 };
