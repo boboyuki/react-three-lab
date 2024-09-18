@@ -7,8 +7,8 @@ type PlaneProps = {
 
 export const Plane = ({ rotateX, position }: PlaneProps) => {
 	return (
-		<mesh rotation-x={rotateX} position={position} receiveShadow>
-			<planeGeometry args={[60, 60]} />
+		<mesh name='floor' rotation-x={rotateX} position={position} receiveShadow>
+			<planeGeometry args={[80, 80]} />
 			<meshLambertMaterial color={0xffffff} />
 		</mesh>
 	);
