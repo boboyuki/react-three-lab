@@ -97,7 +97,7 @@ export const Creeper = ({ isScaleBody }: CreeperProps) => {
 	});
 
 	return (
-		<group ref={group}>
+		<group ref={group} castShadow receiveShadow>
 			<Head />
 			<Body />
 			<Foot
