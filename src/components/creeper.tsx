@@ -88,8 +88,9 @@ export type CreeperProps = {
 };
 
 export const Creeper = ({ isScaleBody }: CreeperProps) => {
-	const offsetRef = useRef({ x: 0, z: 0, rotateY: 0 });
 	const { camera } = useContext(SceneContext);
+	const offsetRef = useRef({ x: 0, z: 0, rotateY: 0 });
+	const targetRef = useRef({ x: 20, z: 20, rotateY: 0.7853981633974484 });
 	const tweenRef = useRef<Tween>(new Tween(offsetRef.current));
 	const tweenBackRef = useRef<Tween>(new Tween(offsetRef.current));
 	const invertRef = useRef(1);
@@ -104,9 +105,6 @@ export const Creeper = ({ isScaleBody }: CreeperProps) => {
 
 	let scaleHeadOffset = 0;
 	const handleTween = () => {
-		// const offset = { x: 0, z: 0, rotateY: 0 };
-		const target = { x: 20, z: 20, rotateY: 0.7853981633974484 }; // 目標值
-
 		const onUpdate = () => {
 			if (!creeperRef.current) return;
 			// 移動
@@ -114,7 +112,7 @@ export const Creeper = ({ isScaleBody }: CreeperProps) => {
 			creeperRef.current.position.z = offsetRef.current.z;
 
 			// 轉身
-			if (target.x > 0) {
+			if (targetRef.current.x > 0) {
 				creeperRef.current.rotation.y = offsetRef.current.rotateY;
 			} else {
 				creeperRef.current.rotation.y = -offsetRef.current.rotateY;
@@ -125,15 +123,15 @@ export const Creeper = ({ isScaleBody }: CreeperProps) => {
 		const handleNewTarget = () => {
 			if (!camera.current) return;
 			// 限制苦力怕走路邊界
-			if (camera.current.position.x > 30) target.x = 20;
-			else if (camera.current.position.x < -30) target.x = -20;
-			else target.x = camera.current.position.x;
-			if (camera.current.position.z > 30) target.z = 20;
-			else if (camera.current.position.z < -30) target.z = -20;
-			else target.z = camera.current.position.z;
+			if (camera.current.position.x > 30) targetRef.current.x = 20;
+			else if (camera.current.position.x < -30) targetRef.current.x = -20;
+			else targetRef.current.x = camera.current.position.x;
+			if (camera.current.position.z > 30) targetRef.current.z = 20;
+			else if (camera.current.position.z < -30) targetRef.current.z = -20;
+			else targetRef.current.z = camera.current.position.z;
 
 			const v1 = new THREE.Vector2(0, 1); // 原點面向方向
-			const v2 = new THREE.Vector2(target.x, target.z); // 苦力怕面向新相機方向
+			const v2 = new THREE.Vector2(targetRef.current.x, targetRef.current.z); // 苦力怕面向新相機方向
 
 			// 內積除以純量得兩向量 cos 值
 			let cosValue = v1.dot(v2) / (v1.length() * v2.length());
@@ -141,14 +139,13 @@ export const Creeper = ({ isScaleBody }: CreeperProps) => {
 			// 防呆，cos 值區間為（-1, 1）
 			if (cosValue > 1) cosValue = 1;
 			else if (cosValue < -1) cosValue = -1;
-
 			// cos 值求轉身角度
-			target.rotateY = Math.acos(cosValue);
+			targetRef.current.rotateY = Math.acos(cosValue);
 		};
 
 		// 朝相機移動
 		tweenRef.current
-			.to(target, 3000)
+			.to(targetRef.current, 3000)
 			.easing(Easing.Quadratic.Out)
 			.onUpdate(onUpdate)
 			.onComplete(() => {
@@ -187,7 +184,7 @@ export const Creeper = ({ isScaleBody }: CreeperProps) => {
 		} else {
 			tweenBackRef.current.start();
 		}
-	}, [invertRef.current, camera.current]);
+	}, []);
 	return (
 		<group ref={creeperRef} castShadow receiveShadow>
 			<Head ref={headRef} />

@@ -6,6 +6,7 @@ import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import { useContext } from 'react';
 import { SceneContext, SceneProvider } from './context/scene';
 import { Light } from './components/light';
+import { Background } from './components/backgroud';
 
 const Scene = () => {
 	const { camera: cameraRef } = useContext(SceneContext);
@@ -25,6 +26,7 @@ const Scene = () => {
 				near={0.1}
 				far={1000}
 			/>
+			<Background />
 			<OrbitControls enableDamping dampingFactor={0.25} />
 			<Light />
 			<Creeper isScaleBody />
